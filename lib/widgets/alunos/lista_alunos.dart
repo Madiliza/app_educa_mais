@@ -231,7 +231,6 @@ class _ListaAlunosState extends State<ListaAlunos> {
         if (ultimoPagamento != null && ultimoPagamento.status != StatusPagamento.pago)
           TextButton.icon(
             onPressed: () {
-              // Adicionado um diálogo de confirmação também para o botão principal
               showDialog(
                 context: context,
                 builder: (ctx) => AlertDialog(
@@ -262,7 +261,7 @@ class _ListaAlunosState extends State<ListaAlunos> {
         ),
         IconButton(
           onPressed: () {
-             // Diálogo de confirmação para exclusão
+            // Este é o diálogo de confirmação que será usado.
             showDialog(
               context: context,
               builder: (ctx) => AlertDialog(
@@ -292,7 +291,7 @@ class _ListaAlunosState extends State<ListaAlunos> {
 
   Widget _buildHistoricoExpandido(List<Pagamento> pagamentosDoAluno) {
     return Container(
-      color: AppColor.fundo.withOpacity(0.5), // Leve alteração na cor para diferenciar
+      color: AppColor.fundo.withOpacity(0.5),
       padding: const EdgeInsets.fromLTRB(20, 16, 20, 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -312,16 +311,12 @@ class _ListaAlunosState extends State<ListaAlunos> {
     );
   }
 
-  // =======================================================================
-  // MÉTODO COM AS ALTERAÇÕES
-  // =======================================================================
   Widget _buildItemHistorico(Pagamento pagamento) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          // Parte Esquerda: Status e Datas
           Row(
             children: [
               _buildStatusChip(pagamento.status),
@@ -342,14 +337,12 @@ class _ListaAlunosState extends State<ListaAlunos> {
               ),
             ],
           ),
-          // Parte Direita: Valor e Botão de Ação
           Row(
             children: [
               Text(
                 Formatadores.formatarMoeda(pagamento.valor),
                 style: const TextStyle(fontWeight: FontWeight.w500, color: AppColor.textoPrincipal),
               ),
-              // O botão só aparece se o pagamento NÃO estiver pago
               if (pagamento.status != StatusPagamento.pago)
                 Padding(
                   padding: const EdgeInsets.only(left: 8.0),

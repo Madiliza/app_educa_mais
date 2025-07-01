@@ -9,9 +9,26 @@ import 'package:provider/provider.dart';
 class TelaAlunos extends StatelessWidget {
   const TelaAlunos({super.key});
 
-  void _abrirFormularioAluno(BuildContext context, {Aluno? aluno}) {
+  // <<-- NOVO: Função auxiliar para exibir o SnackBar de sucesso.
+  void _mostrarMensagemSucesso(BuildContext context, String mensagem) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(mensagem),
+        backgroundColor: AppColor.sucesso, // Cor verde para sucesso
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        margin: const EdgeInsets.all(16),
+      ),
+    );
+  }
+
+  // <<-- ALTERAÇÃO: A função agora é assíncrona para aguardar o resultado do formulário.
+  Future<void> _abrirFormularioAluno(BuildContext context, {Aluno? aluno}) async {
     final appState = Provider.of<AppState>(context, listen: false);
-    showDialog(
+    final bool isEditing = aluno != null;
+
+    // <<-- ALTERAÇÃO: Aguarda o resultado do showDialog. Ele retornará 'true' se o formulário for salvo.
+    final bool? sucesso = await showDialog<bool>(
       context: context,
       barrierDismissible: false,
       builder: (ctx) => AlertDialog(
@@ -25,45 +42,31 @@ class TelaAlunos extends StatelessWidget {
             constraints: const BoxConstraints(maxWidth: 700, maxHeight: 600),
             child: FormularioAluno(
               alunoParaEditar: aluno,
-              aoSalvar: (alunoSalvo) => appState.salvarAluno(alunoSalvo),
+              aoSalvar: (alunoSalvo) async {
+                await appState.salvarAluno(alunoSalvo);
+              },
             ),
           ),
         ),
       ),
     );
+
+    // <<-- NOVO: Se o resultado for 'true', exibe a mensagem de sucesso.
+    if (sucesso == true) {
+      final mensagem = isEditing
+          ? 'Aluno atualizado com sucesso!'
+          : 'Aluno adicionado com sucesso!';
+      _mostrarMensagemSucesso(context, mensagem);
+    }
   }
 
+  // <<-- ALTERAÇÃO: Adicionada a chamada para a mensagem de sucesso.
   void _deletarAluno(BuildContext context, String idAluno) {
     final appState = Provider.of<AppState>(context, listen: false);
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        title: const Text('Confirmar Exclusão'),
-        content: const Text(
-          'Tem certeza de que deseja excluir este aluno e todos os seus dados? Esta ação não pode ser desfeita.',
-        ),
-        actionsPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(),
-            child: const Text('Cancelar'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              appState.deletarAluno(idAluno);
-              Navigator.of(ctx).pop();
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColor.erro,
-              foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-            ),
-            child: const Text('Excluir'),
-          ),
-        ],
-      ),
-    );
+    appState.deletarAluno(idAluno);
+
+    // <<-- NOVO: Exibe a mensagem de sucesso após chamar a função de deletar.
+    _mostrarMensagemSucesso(context, 'Aluno excluído com sucesso!');
   }
 
   @override
@@ -72,6 +75,10 @@ class TelaAlunos extends StatelessWidget {
       backgroundColor: AppColor.fundo,
       body: Consumer<AppState>(
         builder: (context, appState, child) {
+          if (appState.isLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
           return Align(
             alignment: Alignment.topCenter,
             child: ConstrainedBox(
@@ -96,7 +103,7 @@ class TelaAlunos extends StatelessWidget {
                       aoAdicionarAluno: () => _abrirFormularioAluno(context),
                       aoEditarAluno: (aluno) => _abrirFormularioAluno(context, aluno: aluno),
                       aoDeletarAluno: (idAluno) => _deletarAluno(context, idAluno),
-                      aoMarcarComoPago: appState.marcarComoPago, // Passando a função correta
+                      aoMarcarComoPago: appState.marcarComoPago,
                     ),
                   ],
                 ),

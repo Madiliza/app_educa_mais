@@ -35,6 +35,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
     super.initState();
     // A lógica de cálculo permanece a mesma, executada uma vez.
     _calcularDadosDashboard();
+    // Exemplo de mensagem ao carregar o dashboard
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      mostrarMensagem('Dashboard carregado com sucesso!');
+    });
   }
   
   // didUpdateWidget é importante se os dados do AppState puderem mudar dinamicamente
@@ -50,6 +54,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
     }
   }
 
+  // --- MÉTODO DE INTERAÇÃO: MOSTRAR MENSAGEM ---
+  void mostrarMensagem(String mensagem, {Color? cor}) {
+    final snackBar = SnackBar(
+      content: Text(mensagem),
+      backgroundColor: cor ?? Colors.blueAccent,
+      duration: const Duration(seconds: 2),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
   void _calcularDadosDashboard() {
     final agora = DateTime.now();
 
@@ -59,7 +73,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             p.dataPagamento != null &&
             p.dataPagamento!.month == agora.month &&
             p.dataPagamento!.year == agora.year)
-        .fold<double>(0, (soma, p) => soma + p.valor + (p.multaAtraso ?? 0));
+        .fold<double>(0, (soma, p) => soma + p.valor + p.multaAtraso);
 
     totalDespesasMes = widget.despesas
         .where((d) => d.data.month == agora.month && d.data.year == agora.year)
@@ -82,7 +96,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         .toList();
 
     final receitaAtrasada = pagamentosAtrasados.fold<double>(
-        0, (soma, p) => soma + p.valor + (p.multaAtraso ?? 0));
+        0, (soma, p) => soma + p.valor + p.multaAtraso);
 
     secondaryCardData = [
       {

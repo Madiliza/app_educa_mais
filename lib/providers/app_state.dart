@@ -40,6 +40,7 @@ class AppState with ChangeNotifier {
         _alunos = alunos;
         _alunosCarregados = true;
         _checkLoading();
+        notifyListeners(); // <<-- CORREÇÃO: Notifica a UI sobre qualquer mudança na lista de alunos.
       },
       onError: (error) {
         print('Erro ao carregar alunos: $error');
@@ -54,6 +55,7 @@ class AppState with ChangeNotifier {
         _despesas = despesas;
         _despesasCarregadas = true;
         _checkLoading();
+        notifyListeners(); // <<-- CORREÇÃO: Notifica a UI sobre qualquer mudança na lista de despesas.
       },
       onError: (error) {
         print('Erro ao carregar despesas: $error');
@@ -69,6 +71,7 @@ class AppState with ChangeNotifier {
         _pagamentos.sort((a, b) => b.dataVencimento.compareTo(a.dataVencimento));
         _pagamentosCarregados = true;
         _checkLoading();
+        notifyListeners(); // <<-- CORREÇÃO: Notifica a UI sobre qualquer mudança na lista de pagamentos.
       },
       onError: (error) {
         print('Erro ao carregar pagamentos: $error');
@@ -90,7 +93,7 @@ class AppState with ChangeNotifier {
       
       _verificarECriarRecorrencias().then((_) {
         _isLoading = false;
-        notifyListeners();
+        // A notificação final do carregamento inicial será feita pelo listener do stream
       });
     }
   }
@@ -102,6 +105,7 @@ class AppState with ChangeNotifier {
   bool get isLoading => _isLoading;
 
   // --- MÉTODOS DE CRUD ---
+  // Não precisam de notifyListeners() porque o Stream já faz isso.
   Future<void> salvarAluno(Aluno aluno) async {
     await _firebaseService.salvarAluno(aluno);
   }
@@ -118,22 +122,19 @@ class AppState with ChangeNotifier {
     await _firebaseService.deletarDespesa(despesaId);
   }
 
-  // ✅ CORREÇÃO: A função foi movida para o nível da classe
   Future<void> alternarStatusPaga(Despesa despesa) async {
     try {
       final user = _auth.currentUser;
-      if (user == null) return; // Garante que o usuário está logado
+      if (user == null) return;
 
       final docRef = _db
-          .collection('usuarios') // Ajuste o caminho se necessário
+          .collection('usuarios')
           .doc(user.uid)
           .collection('despesas')
           .doc(despesa.id);
 
-      // Atualiza apenas o campo 'pago', invertendo o valor booleano atual
       await docRef.update({'pago': !despesa.pago});
-
-      // O StreamBuilder que escuta as despesas cuidará de atualizar a UI.
+      // O Stream cuidará de atualizar a UI.
     } catch (e) {
       print("Erro ao alternar status da despesa: $e");
     }
@@ -141,6 +142,8 @@ class AppState with ChangeNotifier {
 
   Future<String> marcarComoPago(String pagamentoId) async {
     try {
+      // Esta função realiza uma atualização otimista (atualiza o estado local antes do stream)
+      // para uma resposta mais rápida, o que é uma abordagem válida.
       await _firebaseService.marcarComoPago(pagamentoId);
       final index = _pagamentos.indexWhere((p) => p.id == pagamentoId);
       if (index != -1) {
@@ -178,7 +181,7 @@ class AppState with ChangeNotifier {
     const diaVencimento = 10;
 
     for (final aluno in _alunos) {
-      if (!aluno.ativo) continue; // Pula alunos inativos
+      if (!aluno.ativo) continue;
 
       final pagamentoExiste = _pagamentos.any((p) =>
           p.alunoId == aluno.id &&
@@ -203,9 +206,6 @@ class AppState with ChangeNotifier {
 
   Future<void> _gerarDespesasRecorrentes() async {
     final agora = DateTime.now();
-    // Filtra apenas as despesas que são a "base" da recorrência.
-    // Você pode precisar ajustar essa lógica. Por exemplo, pegar a despesa
-    // recorrente do mês passado para gerar a deste mês.
     final despesasBase = _despesas.where((d) => d.isRecorrente).toList();
 
     for (final despesaBase in despesasBase) {
@@ -227,13 +227,13 @@ class AppState with ChangeNotifier {
           categoria: despesaBase.categoria,
           data: DateTime(agora.year, agora.month, diaVencimento),
           isRecorrente: true, 
-          pago: false, // Nova despesa recorrente sempre nasce como não paga
+          pago: false,
         );
         
         await salvarDespesa(novaDespesa);
       }
-    } // ✅ CORREÇÃO: Chave do 'for' loop no lugar certo.
-  } // ✅ CORREÇÃO: Chave do método no lugar certo.
+    }
+  }
 
   @override
   void dispose() {

@@ -79,27 +79,32 @@ class _FormularioAlunoState extends State<FormularioAluno> {
   }
   // --- FIM DA MODIFICAÇÃO ---
 
-  void _submeterFormulario() {
-    if (_formKey.currentState!.validate()) {
-      final novoAluno = Aluno(
-        id: widget.alunoParaEditar?.id ?? '', // ID é gerenciado pelo Firebase
-        dataCriacao: widget.alunoParaEditar?.dataCriacao ?? DateTime.now(),
-        nome: _nomeController.text.trim(),
-        email: _emailController.text.trim(),
-        telefone: _telefoneController.text,
-        mensalidade: double.tryParse(_mensalidadeController.text.replaceAll(',', '.')) ?? 0.0,
-        nomeResponsavel: _nomeResponsavelController.text.trim(),
-        telefoneResponsavel: _telefoneResponsavelController.text,
-        pessoasAutorizadas: _pessoasAutorizadasControllers
-            .map((controller) => controller.text.trim())
-            .where((nome) => nome.isNotEmpty)
-            .toList(),
-        ativo: widget.alunoParaEditar?.ativo ?? true,
-      );
-      widget.aoSalvar(novoAluno);
-      Navigator.of(context).pop();
-    }
+  // ... dentro da classe _FormularioAlunoState ...
+
+void _submeterFormulario() {
+  if (_formKey.currentState!.validate()) {
+    final novoAluno = Aluno(
+      id: widget.alunoParaEditar?.id ?? '',
+      dataCriacao: widget.alunoParaEditar?.dataCriacao ?? DateTime.now(),
+      nome: _nomeController.text.trim(),
+      email: _emailController.text.trim(),
+      telefone: _telefoneController.text,
+      mensalidade: double.tryParse(_mensalidadeController.text.replaceAll(',', '.')) ?? 0.0,
+      nomeResponsavel: _nomeResponsavelController.text.trim(),
+      telefoneResponsavel: _telefoneResponsavelController.text,
+      pessoasAutorizadas: _pessoasAutorizadasControllers
+          .map((controller) => controller.text.trim())
+          .where((nome) => nome.isNotEmpty)
+          .toList(),
+      ativo: widget.alunoParaEditar?.ativo ?? true,
+    );
+    widget.aoSalvar(novoAluno);
+    
+    // <<-- ALTERAÇÃO: Retorna 'true' para indicar sucesso para a tela anterior.
+    Navigator.of(context).pop(true); 
   }
+}
+
 
   @override
   Widget build(BuildContext context) {

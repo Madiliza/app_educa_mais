@@ -1,6 +1,5 @@
 import 'package:Projeto_Educa_Mais/providers/app_state.dart';
 import 'package:Projeto_Educa_Mais/utils/app_colors.dart';
-import 'package:Projeto_Educa_Mais/widgets/dashboard/dashboard_cards.dart' as cards;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:Projeto_Educa_Mais/widgets/dashboard/dashboard_screen.dart' as screen;
