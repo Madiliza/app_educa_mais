@@ -110,44 +110,8 @@ class ListaDespesas extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 4),
-
-          // ✅ 4. BOTÃO PARA MARCAR COMO PAGA/NÃO PAGA
-          IconButton(
-            icon: Icon(
-              isPaga ? Icons.check_circle : Icons.radio_button_unchecked,
-              color: isPaga ? Colors.green : AppColor.textoSecundario,
-            ),
-            tooltip: isPaga ? 'Marcar como pendente' : 'Marcar como paga',
-            onPressed: () => aoAlternarStatusPaga(despesa),
-          ),
-
-          // Botões de editar e deletar
-          IconButton(
-            icon: const Icon(Icons.edit_outlined,
-                size: 20, color: AppColor.textoSecundario),
-            onPressed: () => aoEditarDespesa(despesa),
-          ),
-          IconButton(
-            icon: const Icon(Icons.delete_outline, size: 20, color: AppColor.erro),
-            onPressed: () => aoDeletarDespesa(despesa.id),
-          ),
         ],
       ),
     );
-  }
-}
-
-
-Map<String, dynamic> toMapCategoriaDespesa(CategoriaDespesa categoria) {
-  switch (categoria) {
-    case CategoriaDespesa.aluguel:
-      return {'icone': Icons.home, 'cor': Colors.blue};
-    case CategoriaDespesa.contas:
-      return {'icone': Icons.pages, 'cor': Colors.orange};
-    case CategoriaDespesa.transporte:
-      return {'icone': Icons.directions_car, 'cor': Colors.purple};
-    // Adicione outros casos
-    default:
-      return {'icone': Icons.category, 'cor': Colors.grey};
   }
 }

@@ -92,17 +92,16 @@ class FirebaseService {
       final pagamentoMap = pagamento.toMap();
 
       if (pagamento.id.isEmpty) {
-        // Se o ID está vazio, é um novo pagamento. O .add() cria um ID automático.
+
         await _db.collection('pagamentos').add(pagamentoMap);
         print('Novo pagamento adicionado com sucesso.');
       } else {
-        // Se já existe um ID, atualiza o documento existente.
+        
         await _db.collection('pagamentos').doc(pagamento.id).update(pagamentoMap);
         print('Pagamento com ID ${pagamento.id} atualizado com sucesso.');
       }
     } catch (e) {
       print('Erro ao salvar pagamento no Firebase: $e');
-      // Re-lança o erro para que a camada superior possa lidar com ele, se necessário.
       throw e;
     }
   }
