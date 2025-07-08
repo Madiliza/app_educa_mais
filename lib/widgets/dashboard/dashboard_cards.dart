@@ -6,7 +6,7 @@ import 'package:Projeto_Educa_Mais/models/status_pagamento.dart';
 import 'package:Projeto_Educa_Mais/utils/formatadores.dart';
 import 'package:Projeto_Educa_Mais/utils/app_colors.dart';
 
-// O antigo widget 'DashboardCards' foi removido. Use este diretamente.
+
 class DashboardScreen extends StatefulWidget {
   final List<Aluno> alunos;
   final List<Pagamento> pagamentos;
@@ -24,8 +24,7 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-  // --- VARIÁVEIS DE ESTADO PARA ARMAZENAR OS DADOS CALCULADOS ---
-  // Elas serão inicializadas uma vez no initState.
+
   late double receitaLiquidaMes;
   late double receitaBrutaMes;
   late double totalDespesasMes;
@@ -34,7 +33,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   void initState() {
     super.initState();
-    // --- LÓGICA DE CÁLCULO É EXECUTADA AQUI, APENAS UMA VEZ ---
+
     _calcularDadosDashboard();
   }
 
@@ -72,7 +71,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final receitaAtrasada = pagamentosAtrasados.fold<double>(
         0, (soma, p) => soma + p.valor + (p.multaAtraso ?? 0));
 
-    // Os dados dos cards secundários também são preparados aqui.
     secondaryCardData = [
       {
         'titulo': "Total de Alunos",
@@ -98,7 +96,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // O método build agora é mais limpo, apenas responsável pela UI.
+
     return Scaffold(
       backgroundColor: AppColor.fundo,
       body: SingleChildScrollView(
@@ -106,7 +104,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // --- CARD PRINCIPAL (KPI) ---
             _MainKpiCard(
               receitaLiquida: receitaLiquidaMes,
               receitaBruta: receitaBrutaMes,
@@ -114,7 +111,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
             const SizedBox(height: 24),
 
-            // --- TÍTULO DA SEÇÃO SECUNDÁRIA ---
             const Text(
               "Detalhes do Mês",
               style: TextStyle(
@@ -125,7 +121,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
             const SizedBox(height: 16),
 
-            // --- GRID DE CARDS SECUNDÁRIOS ---
             LayoutBuilder(
               builder: (context, constraints) {
                 int crossAxisCount;
@@ -136,8 +131,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 } else {
                   crossAxisCount = 1;
                 }
-                
-                // Ajuste o aspect ratio para melhor visualização em diferentes layouts
+
                 double childAspectRatio = crossAxisCount == 1 ? 3.0 : 2.2;
                 if(constraints.maxWidth > 700 && constraints.maxWidth < 800) {
                   childAspectRatio = 1.8;
@@ -173,8 +167,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 }
 
-// Os widgets _MainKpiCard e _InfoCard permanecem exatamente os mesmos.
-// ... (copie e cole os widgets _MainKpiCard e _InfoCard aqui)
 class _MainKpiCard extends StatelessWidget {
   final double receitaLiquida;
   final double receitaBruta;

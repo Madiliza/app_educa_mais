@@ -7,14 +7,13 @@ import 'package:Projeto_Educa_Mais/models/status_pagamento.dart';
 import 'package:Projeto_Educa_Mais/utils/app_colors.dart';
 import 'package:Projeto_Educa_Mais/utils/formatadores.dart';
 
-// Classe auxiliar para representar a combinação de Mês e Ano de forma segura.
+
 class MesAno {
   final int ano;
   final int mes;
 
   MesAno(this.ano, this.mes);
 
-  // Sobrescreve '==' e 'hashCode' para permitir comparações corretas em listas e conjuntos.
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -172,7 +171,7 @@ class _HistoricoPagamentosState extends State<HistoricoPagamentos> {
           const Padding(
             padding: EdgeInsets.fromLTRB(20, 20, 20, 10),
             child: Text(
-              "Histórico de Transações", // Texto alterado para refletir melhor o conteúdo
+              "Histórico de Transações", 
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppColor.textoPrincipal),
             ),
           ),
@@ -256,7 +255,6 @@ class _HistoricoPagamentosState extends State<HistoricoPagamentos> {
   }
 
   Widget _buildEstadoVazio() {
-    // ... (este método permanece inalterado)
      return Padding(
       padding: const EdgeInsets.symmetric(vertical: 64.0),
       child: Column(
@@ -279,9 +277,7 @@ class _HistoricoPagamentosState extends State<HistoricoPagamentos> {
     );
   }
 
-  // =======================================================================
-  // MÉTODO COM AS ALTERAÇÕES
-  // =======================================================================
+
   Widget _buildItemPagamento(Pagamento pagamento) {
     final statusInfo = _getStatusInfo(pagamento.status);
 

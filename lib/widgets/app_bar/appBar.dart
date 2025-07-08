@@ -31,29 +31,28 @@ class _PaginaNavegacao {
 class _TelaPrincipalState extends State<TelaPrincipal> {
   int _paginaAtual = 0;
 
-  // Define as rotas e widgets de cada página.
   final List<_PaginaNavegacao> _paginas = [
     _PaginaNavegacao(
       rota: '/dashboard',
-      widget: TelaDashboard(), // Substitua por sua página real
+      widget: TelaDashboard(), 
       label: 'Dashboard',
       icon: Icons.dashboard_outlined,
     ),
     _PaginaNavegacao(
       rota: '/alunos',
-      widget: TelaAlunos(), // Substitua por sua página real
+      widget: TelaAlunos(), 
       label: 'Alunos',
       icon: Icons.people_outline,
     ),
     _PaginaNavegacao(
       rota: '/pagamentos',
-      widget: TelaPagamentos(), // Substitua por sua página real
+      widget: TelaPagamentos(), 
       label: 'Pagamentos',
       icon: Icons.receipt_long_outlined,
     ),
     _PaginaNavegacao(
       rota: '/despesas',
-      widget: TelaDespesas(), // Substitua por sua página real
+      widget: TelaDespesas(), 
       label: 'Despesas',
       icon: Icons.wallet_outlined,
     ),
@@ -87,8 +86,6 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
         onTap: (index) {
           setState(() {
             _paginaAtual = index;
-            // Navega para a rota se preferir usar rotas nomeadas
-            // Navigator.pushReplacementNamed(context, _paginas[index].rota);
           });
         },
         backgroundColor: AppColor.fundoCard,

@@ -8,7 +8,6 @@ class Despesa {
   final DateTime data;
   final CategoriaDespesa categoria;
   final bool isRecorrente;
-  final bool pago; 
 
   Despesa({
     this.id = '',
@@ -17,7 +16,6 @@ class Despesa {
     required this.data,
     required this.categoria,
     this.isRecorrente = false,
-    this.pago = false, 
   });
 
   // Construtor para criar uma cópia com valores diferentes
@@ -28,7 +26,6 @@ class Despesa {
     DateTime? data,
     CategoriaDespesa? categoria,
     bool? isRecorrente,
-    bool? pago,
   }) {
     return Despesa(
       id: id ?? this.id,
@@ -37,10 +34,8 @@ class Despesa {
       data: data ?? this.data,
       categoria: categoria ?? this.categoria,
       isRecorrente: isRecorrente ?? this.isRecorrente,
-      pago: pago ?? this.pago,
     );
   }
-
 
   Map<String, dynamic> toMap() {
     return {
@@ -49,7 +44,6 @@ class Despesa {
       'data': Timestamp.fromDate(data),
       'categoria': categoria.name,
       'isRecorrente': isRecorrente,
-      'pago': pago, 
     };
   }
 
@@ -62,14 +56,13 @@ class Despesa {
       data: (data['data'] as Timestamp? ?? Timestamp.now()).toDate(),
       categoria: categoriaFromString(data['categoria']),
       isRecorrente: data['isRecorrente'] ?? false,
-      pago: data['pago'] ?? false, 
     );
   }
 }
 
 CategoriaDespesa categoriaFromString(String? value) {
   return CategoriaDespesa.values.firstWhere(
-        (e) => e.name == value,
+    (e) => e.name == value,
     orElse: () => CategoriaDespesa.outros,
   );
 }

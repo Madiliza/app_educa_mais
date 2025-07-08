@@ -40,7 +40,7 @@ class AppState with ChangeNotifier {
         _alunos = alunos;
         _alunosCarregados = true;
         _checkLoading();
-        notifyListeners(); // <<-- CORREÇÃO: Notifica a UI sobre qualquer mudança na lista de alunos.
+        notifyListeners(); 
       },
       onError: (error) {
         print('Erro ao carregar alunos: $error');
@@ -55,7 +55,7 @@ class AppState with ChangeNotifier {
         _despesas = despesas;
         _despesasCarregadas = true;
         _checkLoading();
-        notifyListeners(); // <<-- CORREÇÃO: Notifica a UI sobre qualquer mudança na lista de despesas.
+        notifyListeners(); 
       },
       onError: (error) {
         print('Erro ao carregar despesas: $error');
@@ -71,7 +71,7 @@ class AppState with ChangeNotifier {
         _pagamentos.sort((a, b) => b.dataVencimento.compareTo(a.dataVencimento));
         _pagamentosCarregados = true;
         _checkLoading();
-        notifyListeners(); // <<-- CORREÇÃO: Notifica a UI sobre qualquer mudança na lista de pagamentos.
+        notifyListeners(); 
       },
       onError: (error) {
         print('Erro ao carregar pagamentos: $error');
@@ -93,7 +93,6 @@ class AppState with ChangeNotifier {
       
       _verificarECriarRecorrencias().then((_) {
         _isLoading = false;
-        // A notificação final do carregamento inicial será feita pelo listener do stream
       });
     }
   }
@@ -104,8 +103,7 @@ class AppState with ChangeNotifier {
   List<Pagamento> get pagamentos => _pagamentos;
   bool get isLoading => _isLoading;
 
-  // --- MÉTODOS DE CRUD ---
-  // Não precisam de notifyListeners() porque o Stream já faz isso.
+  // --- MÉTODOS DE MANIPULAÇÃO ---
   Future<void> salvarAluno(Aluno aluno) async {
     await _firebaseService.salvarAluno(aluno);
   }
@@ -132,9 +130,7 @@ class AppState with ChangeNotifier {
           .doc(user.uid)
           .collection('despesas')
           .doc(despesa.id);
-
-      await docRef.update({'pago': !despesa.pago});
-      // O Stream cuidará de atualizar a UI.
+      final docSnapshot = await docRef.get();
     } catch (e) {
       print("Erro ao alternar status da despesa: $e");
     }
@@ -142,8 +138,6 @@ class AppState with ChangeNotifier {
 
   Future<String> marcarComoPago(String pagamentoId) async {
     try {
-      // Esta função realiza uma atualização otimista (atualiza o estado local antes do stream)
-      // para uma resposta mais rápida, o que é uma abordagem válida.
       await _firebaseService.marcarComoPago(pagamentoId);
       final index = _pagamentos.indexWhere((p) => p.id == pagamentoId);
       if (index != -1) {
@@ -164,7 +158,6 @@ class AppState with ChangeNotifier {
     await _firebaseService.salvarPagamento(pagamento);
   }
 
-  // --- LÓGICA DE RECORRÊNCIA ---
   Future<void> _verificarECriarRecorrencias() async {
     print("Iniciando verificação de recorrências...");
     
@@ -178,7 +171,7 @@ class AppState with ChangeNotifier {
 
   Future<void> _gerarPagamentosRecorrentes() async {
     final agora = DateTime.now();
-    const diaVencimento = 10;
+    const diaVencimento = 8;
 
     for (final aluno in _alunos) {
       if (!aluno.ativo) continue;
@@ -227,7 +220,6 @@ class AppState with ChangeNotifier {
           categoria: despesaBase.categoria,
           data: DateTime(agora.year, agora.month, diaVencimento),
           isRecorrente: true, 
-          pago: false,
         );
         
         await salvarDespesa(novaDespesa);

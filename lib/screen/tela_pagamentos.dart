@@ -5,16 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 
-/// A tela que exibe o histórico completo de pagamentos.
-///
-/// Utiliza um layout centralizado e responsivo para apresentar o widget
-/// [HistoricoPagamentos] de forma clara e organizada.
 class TelaPagamentos extends StatelessWidget {
   const TelaPagamentos({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Consome o estado da aplicação para obter os dados necessários.
     final appState = Provider.of<AppState>(context);
     
     return Scaffold(
@@ -22,7 +17,6 @@ class TelaPagamentos extends StatelessWidget {
       body: Align(
         alignment: Alignment.topCenter,
         child: ConstrainedBox(
-          // Limita a largura do conteúdo para melhor legibilidade em telas grandes.
           constraints: const BoxConstraints(maxWidth: 1200),
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(24.0),
@@ -39,7 +33,6 @@ class TelaPagamentos extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 24),
-                // Widget que exibe a lista de pagamentos.
                 HistoricoPagamentos(
                   alunos: appState.alunos,
                   pagamentos: appState.pagamentos,

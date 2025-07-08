@@ -261,7 +261,6 @@ class _ListaAlunosState extends State<ListaAlunos> {
         ),
         IconButton(
           onPressed: () {
-            // Este é o diálogo de confirmação que será usado.
             showDialog(
               context: context,
               builder: (ctx) => AlertDialog(

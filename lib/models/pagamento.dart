@@ -1,5 +1,3 @@
-// Em: models/pagamento.dart
-
 import 'package:Projeto_Educa_Mais/models/status_pagamento.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +18,7 @@ class Pagamento {
     required this.dataVencimento,
     this.dataPagamento,
     StatusPagamento? status,
-    this.multaAtraso = 0.0,
+    this.multaAtraso = 2.0,
   }) : status = status ?? _calcularStatus(dataVencimento, dataPagamento);
 
   static StatusPagamento _calcularStatus(
@@ -52,7 +50,6 @@ class Pagamento {
       valor: valor ?? this.valor,
       dataVencimento: dataVencimento ?? this.dataVencimento,
       status: status ?? this.status,
-      // Se dataPagamento for fornecido, o construtor já recalcula o status
       dataPagamento: dataPagamento ?? this.dataPagamento,
       multaAtraso: multaAtraso ?? this.multaAtraso,
     );
@@ -70,12 +67,11 @@ class Pagamento {
     };
   }
   
-  // ✅ REFINAMENTO: O `fromFirestore` agora usa o `fromMap`.
   factory Pagamento.fromFirestore(DocumentSnapshot<Map<String, dynamic>> doc) {
     return Pagamento.fromMap(doc.data()!, doc.id);
   }
 
-  // ✅ REFINAMENTO: Um construtor que apenas lida com o Map. Torna o código mais testável.
+
   factory Pagamento.fromMap(Map<String, dynamic> map, String id) {
     final dataVencimento = (map['dataVencimento'] as Timestamp? ?? Timestamp.now()).toDate();
     final dataPagamento = (map['dataPagamento'] as Timestamp?)?.toDate();
@@ -86,7 +82,6 @@ class Pagamento {
       valor: (map['valor'] as num?)?.toDouble() ?? 0.0,
       dataVencimento: dataVencimento,
       dataPagamento: dataPagamento,
-      // Passa o status do banco para o construtor. Se for nulo, o construtor calcula.
       status: statusFromString(map['status']),
       multaAtraso: (map['multaAtraso'] as num?)?.toDouble() ?? 0.0,
     );

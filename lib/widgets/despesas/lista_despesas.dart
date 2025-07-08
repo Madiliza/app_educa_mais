@@ -1,5 +1,5 @@
 import 'package:Projeto_Educa_Mais/models/categoria_despesa.dart';
-import 'package:Projeto_Educa_Mais/models/despesa.dart'; // Certifique-se que este modelo tem o campo 'bool pago'
+import 'package:Projeto_Educa_Mais/models/despesa.dart';
 import 'package:Projeto_Educa_Mais/utils/app_colors.dart';
 import 'package:Projeto_Educa_Mais/utils/formatadores.dart';
 import 'package:flutter/material.dart';
@@ -8,14 +8,12 @@ class ListaDespesas extends StatelessWidget {
   final List<Despesa> despesas;
   final Function(Despesa) aoEditarDespesa;
   final Function(String) aoDeletarDespesa;
-  final Function(Despesa) aoAlternarStatusPaga; // ✅ 1. NOVA FUNÇÃO NECESSÁRIA
 
   const ListaDespesas({
     super.key,
     required this.despesas,
     required this.aoEditarDespesa,
     required this.aoDeletarDespesa,
-    required this.aoAlternarStatusPaga, // ✅ 2. ADICIONADO AO CONSTRUTOR
   });
 
   @override
@@ -72,15 +70,10 @@ class ListaDespesas extends StatelessWidget {
 
   Widget _buildItemDespesa(BuildContext context, Despesa despesa) {
     final infoCategoria = toMapCategoriaDespesa(despesa.categoria);
-    final bool isPaga = despesa.pago; // ✅ 3. VERIFICA O STATUS
 
-    // Define cores e estilos com base no status 'pago'
-    final Color corPrincipal =
-        isPaga ? Colors.grey : (infoCategoria['cor'] as Color);
-    final Color corTexto = isPaga ? Colors.grey : AppColor.textoPrincipal;
-    final Color corValor = isPaga ? Colors.green : AppColor.erro;
-    final TextDecoration decoracaoTexto =
-        isPaga ? TextDecoration.lineThrough : TextDecoration.none;
+    final Color corPrincipal = (infoCategoria['cor'] as Color);
+    final Color corTexto = AppColor.textoPrincipal;
+    final Color corValor = AppColor.erro;
 
     return ListTile(
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -93,7 +86,6 @@ class ListaDespesas extends StatelessWidget {
         style: TextStyle(
           fontWeight: FontWeight.bold,
           color: corTexto,
-          decoration: decoracaoTexto,
         ),
       ),
       subtitle: Text(Formatadores.formatarData(despesa.data)),
@@ -106,12 +98,16 @@ class ListaDespesas extends StatelessWidget {
               fontWeight: FontWeight.bold,
               fontSize: 16,
               color: corValor,
-              decoration: decoracaoTexto,
             ),
           ),
-          const SizedBox(width: 4),
+          const SizedBox(width: 8), // Espaçamento para o botão de apagar
+          IconButton(
+            icon: const Icon(Icons.delete, color: AppColor.erro),
+            onPressed: () => aoDeletarDespesa(despesa.id),
+          ),
         ],
       ),
+      onTap: () => aoEditarDespesa(despesa), 
     );
   }
 }

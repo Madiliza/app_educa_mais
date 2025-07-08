@@ -16,17 +16,15 @@ class FirebaseService {
 
   Future<void> salvarAluno(Aluno aluno) {
     if (aluno.id.isEmpty) {
-      // Cria um novo aluno e gera os pagamentos para os próximos 12 meses
       final batch = _db.batch();
       final alunoRef = _db.collection('alunos').doc();
       batch.set(alunoRef, aluno.toMap());
       
-      // Gera os próximos 12 pagamentos
       _gerarPagamentosIniciais(batch, alunoRef.id, aluno.mensalidade);
 
       return batch.commit();
     } else {
-      // Apenas atualiza o aluno existente
+    
       return _db.collection('alunos').doc(aluno.id).update(aluno.toMap());
     }
   }
@@ -34,12 +32,12 @@ class FirebaseService {
   void _gerarPagamentosIniciais(WriteBatch batch, String alunoId, double mensalidade) {
     final hoje = DateTime.now();
     for (int i = 0; i < 12; i++) {
-      final dataVencimento = DateTime(hoje.year, hoje.month + i, 10);
+      final dataVencimento = DateTime(hoje.year, hoje.month + i, 8);
       final pagamento = Pagamento(
         alunoId: alunoId,
         valor: mensalidade,
         dataVencimento: dataVencimento, 
-        multaAtraso: 0.0,
+        multaAtraso: 2.0,
         status: StatusPagamento.pendente,
       );
       final pagamentoRef = _db.collection('pagamentos').doc();

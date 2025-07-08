@@ -1,5 +1,5 @@
 import 'package:Projeto_Educa_Mais/models/despesa.dart';
-import 'package:Projeto_Educa_Mais/providers/app_state.dart'; // ✅ Garanta que AppState tenha o método para alternar o status
+import 'package:Projeto_Educa_Mais/providers/app_state.dart';
 import 'package:Projeto_Educa_Mais/utils/app_colors.dart';
 import 'package:Projeto_Educa_Mais/widgets/despesas/formulario_despesa.dart';
 import 'package:Projeto_Educa_Mais/widgets/despesas/lista_despesas.dart';
@@ -52,13 +52,6 @@ class TelaDespesas extends StatelessWidget {
     );
   }
 
-  // ✅ 1. FUNÇÃO QUE FALTAVA PARA ALTERNAR O STATUS DE PAGAMENTO
-  void _alternarStatusPaga(BuildContext context, Despesa despesa) {
-    final appState = Provider.of<AppState>(context, listen: false);
-    // Chama o método no seu AppState, que deve cuidar da lógica com o Firebase
-    appState.alternarStatusPaga(despesa);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -101,9 +94,6 @@ class TelaDespesas extends StatelessWidget {
                       aoEditarDespesa: (despesa) =>
                           _abrirFormularioDespesa(context, despesa: despesa),
                       aoDeletarDespesa: (id) => _deletarDespesa(context, id),
-                      // ✅ 2. PASSANDO A NOVA FUNÇÃO PARA O WIDGET
-                      aoAlternarStatusPaga: (despesa) =>
-                          _alternarStatusPaga(context, despesa),
                     ),
                   ],
                 ),

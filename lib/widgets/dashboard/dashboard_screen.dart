@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'package:Projeto_Educa_Mais/models/aluno.dart';
 import 'package:Projeto_Educa_Mais/models/despesa.dart';
 import 'package:Projeto_Educa_Mais/models/pagamento.dart';
@@ -24,7 +23,6 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-  // --- VARIÁVEIS DE ESTADO PARA ARMAZENAR OS DADOS CALCULADOS ---
   late double receitaLiquidaMes;
   late double receitaBrutaMes;
   late double totalDespesasMes;
@@ -33,16 +31,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   void initState() {
     super.initState();
-    // A lógica de cálculo permanece a mesma, executada uma vez.
     _calcularDadosDashboard();
-    // Exemplo de mensagem ao carregar o dashboard
     WidgetsBinding.instance.addPostFrameCallback((_) {
       mostrarMensagem('Dashboard carregado com sucesso!');
     });
   }
-  
-  // didUpdateWidget é importante se os dados do AppState puderem mudar dinamicamente
-  // e você quiser que o dashboard reflita essas mudanças.
+
   @override
   void didUpdateWidget(covariant DashboardScreen oldWidget) {
     super.didUpdateWidget(oldWidget);
@@ -123,13 +117,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // CORREÇÃO: Removido o Scaffold, a SingleChildScrollView e o Padding.
-    // O widget agora retorna diretamente a Column com o conteúdo, que se encaixará
-    // perfeitamente no layout da TelaDashboard.
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // --- CARD PRINCIPAL (KPI) ---
+      
         _MainKpiCard(
           receitaLiquida: receitaLiquidaMes,
           receitaBruta: receitaBrutaMes,
@@ -137,7 +128,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ),
         const SizedBox(height: 24),
 
-        // --- TÍTULO DA SEÇÃO SECUNDÁRIA ---
         const Text(
           "Detalhes do Mês",
           style: TextStyle(
@@ -148,7 +138,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ),
         const SizedBox(height: 16),
 
-        // --- GRID DE CARDS SECUNDÁRIOS ---
         LayoutBuilder(
           builder: (context, constraints) {
             int crossAxisCount;
@@ -173,8 +162,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 childAspectRatio: childAspectRatio,
               ),
               itemCount: secondaryCardData.length,
-              shrinkWrap: true, // Necessário dentro de uma Column/SingleChildScrollView
-              physics: const NeverScrollableScrollPhysics(), // A rolagem é controlada pelo pai
+              shrinkWrap: true, 
+              physics: const NeverScrollableScrollPhysics(), 
               itemBuilder: (context, index) {
                 final data = secondaryCardData[index];
                 return _InfoCard(
@@ -193,7 +182,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 }
 
-// --- WIDGETS AUXILIARES (copiados como solicitado) ---
 
 class _MainKpiCard extends StatelessWidget {
   final double receitaLiquida;

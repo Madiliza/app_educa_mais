@@ -35,7 +35,6 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         scaffoldBackgroundColor: AppColor.fundo,
         fontFamily: 'Inter',
-        // ... (seu tema continua aqui)
       ),
       home: const TelaPrincipal(),
     );

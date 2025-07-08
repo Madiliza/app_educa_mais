@@ -45,7 +45,6 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
               child: CircularProgressIndicator(color: AppColor.primaria),
             );
           }
-          // Layout com menu de navegação lateral
           return Row(
             children: [
               NavigationRail(

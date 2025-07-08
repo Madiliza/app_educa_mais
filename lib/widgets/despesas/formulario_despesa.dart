@@ -26,8 +26,7 @@ class _FormularioDespesaState extends State<FormularioDespesa> {
 
   DateTime? _dataSelecionada;
   CategoriaDespesa? _categoriaSelecionada;
-  bool _isRecorrente = false; // <-- NOVO ESTADO
-  bool _pago = false;
+  bool _isRecorrente = false;
 
   @override
   void initState() {
@@ -39,8 +38,7 @@ class _FormularioDespesaState extends State<FormularioDespesa> {
       _dataSelecionada = d.data;
       _dataController.text = DateFormat('dd/MM/yyyy').format(d.data);
       _categoriaSelecionada = d.categoria;
-      _isRecorrente = d.isRecorrente; 
-      _pago = d.pago;
+      _isRecorrente = d.isRecorrente;
     } else {
       _dataSelecionada = DateTime.now();
       _dataController.text = DateFormat('dd/MM/yyyy').format(_dataSelecionada!);
@@ -52,13 +50,12 @@ class _FormularioDespesaState extends State<FormularioDespesa> {
     if (_formKey.currentState!.validate()) {
       final valor = double.tryParse(_valorController.text.replaceAll(',', '.')) ?? 0;
       final novaDespesa = Despesa(
-        id: widget.despesaParaEditar?.id ?? '', // Mantenha o ID se estiver editando
+        id: widget.despesaParaEditar?.id ?? '',
         descricao: _descricaoController.text,
         valor: valor,
         data: _dataSelecionada!,
         categoria: _categoriaSelecionada!,
-        isRecorrente: _isRecorrente, // <-- Salva o estado
-        pago: _pago,
+        isRecorrente: _isRecorrente,
       );
       widget.aoSalvar(novaDespesa);
       Navigator.of(context).pop();
@@ -127,7 +124,6 @@ class _FormularioDespesaState extends State<FormularioDespesa> {
               },
             ),
             const SizedBox(height: 16),
-            // ✅ NOVO WIDGET CHECKBOX
             CheckboxListTile(
               title: const Text("Despesa Recorrente"),
               subtitle: const Text("Esta despesa se repetirá todo mês."),

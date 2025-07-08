@@ -1,6 +1,6 @@
 import 'package:Projeto_Educa_Mais/models/aluno.dart';
 import 'package:Projeto_Educa_Mais/utils/app_colors.dart';
-import 'package:Projeto_Educa_Mais/utils/formatadores.dart'; // Certifique-se de que este arquivo existe e contém MascaraTelefoneInputFormatter
+import 'package:Projeto_Educa_Mais/utils/formatadores.dart'; 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -40,7 +40,6 @@ class _FormularioAlunoState extends State<FormularioAluno> {
     _nomeResponsavelController = TextEditingController(text: aluno?.nomeResponsavel ?? '');
     _telefoneResponsavelController = TextEditingController(text: aluno?.telefoneResponsavel ?? '');
 
-    // Garante que haja pelo menos um controller se a lista estiver vazia
     _pessoasAutorizadasControllers = (aluno?.pessoasAutorizadas.isNotEmpty ?? false)
         ? aluno!.pessoasAutorizadas.map((nome) => TextEditingController(text: nome)).toList()
         : [TextEditingController()];
@@ -64,22 +63,17 @@ class _FormularioAlunoState extends State<FormularioAluno> {
     setState(() => _pessoasAutorizadasControllers.add(TextEditingController()));
   }
 
-  // --- MODIFICAÇÃO AQUI ---
   void _removerPessoaAutorizada(int index) {
     setState(() {
       if (_pessoasAutorizadasControllers.length > 1) {
-        // Se houver mais de um campo, remove o controller e o campo
         _pessoasAutorizadasControllers[index].dispose();
         _pessoasAutorizadasControllers.removeAt(index);
       } else {
-        // Se for o último campo, apenas limpa o texto
         _pessoasAutorizadasControllers[index].clear();
       }
     });
   }
-  // --- FIM DA MODIFICAÇÃO ---
 
-  // ... dentro da classe _FormularioAlunoState ...
 
 void _submeterFormulario() {
   if (_formKey.currentState!.validate()) {
@@ -99,8 +93,7 @@ void _submeterFormulario() {
       ativo: widget.alunoParaEditar?.ativo ?? true,
     );
     widget.aoSalvar(novoAluno);
-    
-    // <<-- ALTERAÇÃO: Retorna 'true' para indicar sucesso para a tela anterior.
+
     Navigator.of(context).pop(true); 
   }
 }
@@ -180,7 +173,6 @@ void _submeterFormulario() {
     );
   }
 
-  // --- MODIFICAÇÃO AQUI ---
   Widget _buildSecaoPessoasAutorizadas() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -217,7 +209,6 @@ void _submeterFormulario() {
       ],
     );
   }
-  // --- FIM DA MODIFICAÇÃO ---
 
   Widget _buildBotoesAcao() {
     return Padding(
